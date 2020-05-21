@@ -1,0 +1,102 @@
+version: '3'
+services:
+
+  #PHP Service 
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    container_name: lemp_php
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: lemp_php_app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./src/:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  #Nginx Service
+  webserver:
+    # Docker Image Nginx
+    image: nginx:alpine
+    container_name: lemp_nginx
+    restart: unless-stopped
+    tty: true
+    # port for running PHP in browser http://localhost:8000
+    ports:
+      - "8000:80"
+      - "443:443"
+    environment:
+      SERVICE_NAME: lemp_nginx_app
+      SERVICE_TAGS: dev
+    volumes:
+      - ./src/:/var/www
+      - ./docker/local/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./docker/local/nginx/logs/access.log:/var/log/nginx/access.log
+      - ./docker/local/nginx/logs/error.log:/var/log/nginx/error.log
+    networks:
+      - app-network
+
+  #MySQL Service
+  mysql:
+    image: mysql:5.7.22
+    container_name: lemp_mysql
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: lemp_mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456
+      SERVICE_TAGS: dev
+      SERVICE_NAME: lemp_mysql_app
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./docker/local/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network 
+
+  #PHPMyadmin
+  phpmyadmin:
+    image: 'phpmyadmin/phpmyadmin'
+    container_name: lemp_phpmyadmin
+    restart: always
+    ports:
+       - '8080:80'
+    environment:
+        MYSQL_USERNAME: root
+        MYSQL_ROOT_PASSWORD: 123456
+        PMA_HOST: mysql
+        SERVICE_TAGS: dev
+        SERVICE_NAME: lemp_phpmyadmin_app
+    networks:
+      - app-network
+
+  #redis
+  redis:
+    image: redis:latest
+    container_name: lemp_redis
+    environment:
+      SERVICE_NAME: lemp_redis_app
+      SERVICE_TAGS: dev
+    ports:
+        - "6379:6379"
+    networks:
+      - app-network
+
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local
