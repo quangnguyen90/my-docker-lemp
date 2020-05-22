@@ -1,17 +1,30 @@
-FROM php:7.2-fpm
+FROM php:7.4-fpm-alpine
 
-# Copy composer.lock and composer.json
-COPY ./src/composer.lock ./src/composer.json /var/www/
+LABEL author="Quang Nguyen Phu"
+LABEL maintainer="nguyenphuquang90@gmail.com"
+LABEL build_date="2020-05-22"
+
+ENV TZ=Asia/Bangkok
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Set working directory
-WORKDIR /var/www
+WORKDIR /var/www/lempdemo
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
+    autoconf \
+	dpkg-dev \
     build-essential \
     libpng-dev \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
+    libicu-dev \
+    libxslt1-dev \ 
+    sendmail-bin \ 
+    sendmail \ 
+    sudo \
+    libonig-dev \
+    libzip-dev
     locales \
     zip \
     jpegoptim optipng pngquant gifsicle \
@@ -27,23 +40,28 @@ RUN apt-get update && apt-get install -y \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install extensions
-RUN docker-php-ext-install mcrypt pdo_mysql mbstring zip exif pcntl
+# Install required PHP extensions
+RUN docker-php-ext-install mcrypt pdo_mysql mbstring zip exif pcntl gd dom soap
+
+# Configure the gd library
 RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
-RUN docker-php-ext-install gd
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install --no-dev --no-scripts
+
+# Install nodejs
+RUN apt-get -y install nodejs && apt-get -y install npm
 
 # Add user for laravel application
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
 # Copy existing application directory contents
-COPY ./src /var/www
+COPY ./src /var/www/lempdemo
 
 # Copy existing application directory permissions
-COPY --chown=www:www . /var/www
+COPY --chown=www:www . /var/www/lempdemo
 
 # Change current user to www
 USER www

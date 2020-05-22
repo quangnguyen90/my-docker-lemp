@@ -15,7 +15,7 @@ services:
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
-      - ./src/:/var/www
+      - ./src:/var/www/lempdemo
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
@@ -23,20 +23,19 @@ services:
   #Nginx Service
   webserver:
     # Docker Image Nginx
-    image: nginx:alpine
+    image: nginx:stable-alpine
     container_name: lemp_nginx
     restart: unless-stopped
     tty: true
     # port for running PHP in browser http://localhost:8000
     ports:
       - "8000:80"
-      - "443:443"
     environment:
       SERVICE_NAME: lemp_nginx_app
       SERVICE_TAGS: dev
     volumes:
-      - ./src/:/var/www
-      - ./docker/local/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./src:/var/www/lempdemmo
+      - ./docker/local/nginx/conf.d/lempdemo.conf:/etc/nginx/conf.d/lempdemo.conf
       - ./docker/local/nginx/logs/access.log:/var/log/nginx/access.log
       - ./docker/local/nginx/logs/error.log:/var/log/nginx/error.log
     networks:
@@ -44,7 +43,7 @@ services:
 
   #MySQL Service
   mysql:
-    image: mysql:5.7.22
+    image: mysql:5.7.29
     container_name: lemp_mysql
     restart: unless-stopped
     tty: true
@@ -58,7 +57,7 @@ services:
       SERVICE_TAGS: dev
       SERVICE_NAME: lemp_mysql_app
     volumes:
-      - dbdata:/var/lib/mysql/
+      - ./docker/local/mysql/dbdata:/var/lib/mysql/
       - ./docker/local/mysql/my.cnf:/etc/mysql/my.cnf
     networks:
       - app-network 

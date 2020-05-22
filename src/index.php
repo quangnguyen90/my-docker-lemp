@@ -3,7 +3,7 @@
 $dbname = 'lempmysql';
 $dbuser = 'root';
 $dbpass = '123456';
-$dbhost = '192.168.56.44';
+$dbhost = 'mysql';
  
 $link = mysqli_connect($dbhost, $dbuser, $dbpass) or die("Unable to Connect to '$dbhost'");
 mysqli_select_db($link, $dbname) or die("Could not open the db '$dbname'");
