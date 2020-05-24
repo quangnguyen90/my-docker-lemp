@@ -4,8 +4,13 @@ LABEL author="Quang Nguyen Phu"
 LABEL maintainer="nguyenphuquang90@gmail.com"
 LABEL build_date="2020-05-22"
 
+RUN mkdir /var/www/lempdemo
+
+# Set timezone
 ENV TZ=Asia/Bangkok
+RUN rm /etc/localtime
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN "date"
 
 # Set working directory
 WORKDIR /var/www/lempdemo
@@ -13,7 +18,7 @@ WORKDIR /var/www/lempdemo
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     autoconf \
-	dpkg-dev \
+    dpkg-dev \
     build-essential \
     libpng-dev \
     libjpeg62-turbo-dev \
@@ -24,7 +29,7 @@ RUN apt-get update && apt-get install -y \
     sendmail \ 
     sudo \
     libonig-dev \
-    libzip-dev
+    libzip-dev \
     locales \
     zip \
     jpegoptim optipng pngquant gifsicle \
@@ -32,6 +37,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
+    toilet \
+    figlet \
     libmcrypt-dev \
     mysql-client libmagickwand-dev --no-install-recommends \
     && pecl install imagick \
@@ -49,6 +56,7 @@ RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --wi
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --no-scripts
+RUN composer --version
 
 # Install nodejs
 RUN apt-get -y install nodejs && apt-get -y install npm

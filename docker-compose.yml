@@ -30,6 +30,7 @@ services:
     # port for running PHP in browser http://localhost:8000
     ports:
       - "8000:80"
+      - "443:443"
     environment:
       SERVICE_NAME: lemp_nginx_app
       SERVICE_TAGS: dev
@@ -89,7 +90,19 @@ services:
         - "6379:6379"
     networks:
       - app-network
-
+  
+  #redis-commander
+  redis-commander:
+    container_name: lemp_redis_commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379      
+    ports:
+      - 8081:8081
+    networks:
+        - app-network
 
 #Docker Networks
 networks:
