@@ -34,7 +34,7 @@
 
 ### 🚀 Stack
 - nginx stable alpine
-- php 7.4
+- php 7.2
 - mysql:5.7.29
 - redis: lastest
 - phpMyAdmin
