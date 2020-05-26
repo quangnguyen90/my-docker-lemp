@@ -6,11 +6,13 @@ LABEL build_date="2020-05-22"
 
 RUN mkdir /var/www/lempdemo
 
+COPY ./src/composer.json /var/www/lempdemo/
+
 # Set working directory
 WORKDIR /var/www/lempdemo
 
 # Set timezone
-ENV TZ=Asia/Bangkok
+ENV TZ=Asia/Ho_Chi_Minh
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN "date"
 
@@ -29,6 +31,9 @@ RUN  apt-get install -y libmcrypt-dev \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-enable mcrypt
 
+# Install nodejs
+RUN apt-get -y install nodejs && apt-get -y install npm
+
 #install zip extensions`
 RUN apt-get install -y \
         libzip-dev \
@@ -45,8 +50,9 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl dom soap
 # Configure the gd library
 RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
 
-# Install nodejs
-RUN apt-get -y install nodejs && apt-get -y install npm
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install --no-dev --no-scripts
 
 # Add user for laravel application
 RUN groupadd -g 1000 www
@@ -55,12 +61,15 @@ RUN useradd -u 1000 -ms /bin/bash -g www www
 # Copy existing application directory contents
 COPY ./src /var/www/lempdemo
 
+# Set permissions
+RUN chown -R www-data:www-data /var/www/lempdemo/public
+
 # Copy existing application directory permissions
-COPY --chown=www:www . /var/www/lempdemo
+# COPY --chown=www:www . /var/www/lempdemo
 
 # Change current user to www
-USER www
+#USER www
 
 # Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+#EXPOSE 9000
+#CMD ["php-fpm"]

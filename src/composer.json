@@ -1,0 +1,12 @@
+{
+    "name": "lempdemo",
+    "description": "My Demo Project",
+    "authors": [
+        {
+            "name": "Nguyen Phu Quang"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "1.12.0"
+    }
+}

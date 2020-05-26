@@ -1,114 +1,101 @@
 version: '3'
+
 services:
 
-  #PHP Service 
-  app:
+  # The PHP Application Service
+  php_app:
+    container_name: lemp_php
     build:
       context: ./
       dockerfile: Dockerfile
-    image: digitalocean.com/php
-    container_name: lemp_php
-    restart: unless-stopped
-    tty: true
-    environment:
-      SERVICE_NAME: lemp_php_app
-      SERVICE_TAGS: dev
-    working_dir: /var/www
     volumes:
       - ./src:/var/www/lempdemo
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    environment:
+      - "DB_HOST=mysql"
+      - "REDIS_HOST=redis_cache"
     networks:
       - app-network
 
-  #Nginx Service
-  webserver:
-    # Docker Image Nginx
-    image: nginx:stable-alpine
+  # The Web Nginx Service
+  nginx_server:
     container_name: lemp_nginx
-    restart: unless-stopped
-    tty: true
-    # port for running PHP in browser http://localhost:8000
-    ports:
-      - "8000:80"
-      - "443:443"
-    environment:
-      SERVICE_NAME: lemp_nginx_app
-      SERVICE_TAGS: dev
+    build:
+      context: ./
+      dockerfile: docker/local/nginx/Dockerfile
     volumes:
       - ./src:/var/www/lempdemmo
       - ./docker/local/nginx/conf.d/lempdemo.conf:/etc/nginx/conf.d/lempdemo.conf
       - ./docker/local/nginx/logs/access.log:/var/log/nginx/access.log
       - ./docker/local/nginx/logs/error.log:/var/log/nginx/error.log
+    # port for running PHP in browser http://localhost:8000
+    ports:
+      - "8000:80"
+      - "443:443"
     networks:
       - app-network
 
-  #MySQL Service
+  # The MySQL Service
   mysql:
-    image: mysql:5.7.29
     container_name: lemp_mysql
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: lemp_mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: 123456
-      MYSQL_ROOT_PASSWORD: 123456
-      SERVICE_TAGS: dev
-      SERVICE_NAME: lemp_mysql_app
+    image: mysql:5.7
     volumes:
       - ./docker/local/mysql/dbdata:/var/lib/mysql/
       - ./docker/local/mysql/my.cnf:/etc/mysql/my.cnf
+    environment:
+      - "MYSQL_DATABASE=lemp_mysql"
+      - "MYSQL_USER=root"
+      - "MYSQL_PASSWORD=123456"
+      - "MYSQL_ROOT_PASSWORD=123456"
+      - "TZ=Asia/Ho_Chi_Minh"
+    ports:
+      - '3308:3306'
     networks:
-      - app-network 
+      - app-network
 
-  #PHPMyadmin
+  # The PHPMyadmin service
   phpmyadmin:
     image: 'phpmyadmin/phpmyadmin'
     container_name: lemp_phpmyadmin
-    restart: always
-    ports:
-       - '8080:80'
     environment:
-        MYSQL_USERNAME: root
-        MYSQL_ROOT_PASSWORD: 123456
-        PMA_HOST: mysql
-        SERVICE_TAGS: dev
-        SERVICE_NAME: lemp_phpmyadmin_app
+      - "MYSQL_USERNAME=root"
+      - "MYSQL_ROOT_PASSWORD=123456"
+      - "PMA_HOST=mysql"
+    # port for running PHPMyAdmin in browser http://localhost:8080
+    ports:
+      - '8080:80'
     networks:
       - app-network
 
-  #redis
-  redis:
-    image: redis:latest
+  # The Redis Service
+  redis_cache:
     container_name: lemp_redis
-    environment:
-      SERVICE_NAME: lemp_redis_app
-      SERVICE_TAGS: dev
+    image: redis:latest
     ports:
-        - "6379:6379"
+      - "6379:6379"
+    environment:
+      - "REDIS_HOST=redis_cache"
     networks:
       - app-network
-  
-  #redis-commander
-  redis-commander:
+
+  # The Redis-commander Service
+  redis_commander:
     container_name: lemp_redis_commander
-    hostname: redis-commander
     image: rediscommander/redis-commander:latest
-    restart: always
     environment:
-      - REDIS_HOSTS=local:redis:6379      
+      - "REDIS_HOST=redis_cache"
+    # port for running Redis Commander in browser http://localhost:8081
     ports:
       - 8081:8081
+    hostname: redis-commander
     networks:
-        - app-network
+      - app-network
 
-#Docker Networks
+# Docker Networks
 networks:
   app-network:
     driver: bridge
-#Volumes
+
+# Volumes
 volumes:
   dbdata:
-    driver: local

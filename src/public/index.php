@@ -1,6 +1,6 @@
 <?php
  
-$dbname = 'lempmysql';
+$dbname = 'lemp_mysql';
 $dbuser = 'root';
 $dbpass = '123456';
 $dbhost = 'mysql';
