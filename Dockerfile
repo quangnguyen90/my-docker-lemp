@@ -54,15 +54,19 @@ RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --wi
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --no-scripts
 
-# Add user for laravel application
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+# Add user for web application
+RUN groupmod -g 1000 www-data && \
+    usermod -u 1000 www-data
 
 # Copy existing application directory contents
 COPY ./src /var/www/lempdemo
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/lempdemo/public
+
+# Add user for web application
+# RUN groupadd -g 1000 www
+# RUN useradd -u 1000 -ms /bin/bash -g www www
 
 # Copy existing application directory permissions
 # COPY --chown=www:www . /var/www/lempdemo

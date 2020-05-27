@@ -24,7 +24,7 @@
 - username : root
 - password : 123456
 - database : lemp_mysql
-- port : 3307
+- port : 6033
 
 ### 🚀 Using a virtual host
 
@@ -34,8 +34,8 @@
 
 ### Check Browser
 - localhost:8000 -> web
-- localhost:8080 -> phpMyAdmin
-- localhost:8081 -> redisCommander
+- localhost:8001 -> phpMyAdmin
+- localhost:8002 -> redisCommander
 
 ### 🚀 Stack
 - nginx stable alpine
