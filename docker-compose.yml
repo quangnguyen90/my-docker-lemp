@@ -24,7 +24,7 @@ services:
       context: ./
       dockerfile: docker/local/nginx/Dockerfile
     volumes:
-      - ./src:/var/www/lempdemmo
+      - ./src:/var/www/lempdemo
       - ./docker/local/nginx/conf.d/lempdemo.conf:/etc/nginx/conf.d/lempdemo.conf
       - ./docker/local/nginx/logs/access.log:/var/log/nginx/access.log
       - ./docker/local/nginx/logs/error.log:/var/log/nginx/error.log
@@ -40,17 +40,17 @@ services:
     container_name: lemp_mysql
     image: mysql:5.7
     volumes:
-      - dbdata:/var/lib/mysql/
+      - dbdata:/var/lib/mysql
       - ./docker/local/mysql/my.cnf:/etc/mysql/my.cnf
     environment:
-      - "DB_HOST=mysql"
-      - "MYSQL_DATABASE=lemp_mysql"
-      - "MYSQL_USER=root"
-      - "MYSQL_PASSWORD=123456"
-      - "MYSQL_ROOT_PASSWORD=123456"
-      - "TZ=Asia/Ho_Chi_Minh"
+      DB_HOST: mysql
+      MYSQL_DATABASE: lemp_mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456
+      TZ: Asia/Ho_Chi_Minh
     ports:
-      - 6033:3306
+      - 13306:3306
     networks:
       - app-network
 
@@ -62,7 +62,7 @@ services:
       MYSQL_USERNAME: root
       MYSQL_ROOT_PASSWORD: 123456
       DB_HOST: mysql
-    # port for running PHPMyAdmin in browser http://localhost:8080
+    # port for running PHPMyAdmin in browser http://localhost:8001
     ports:
       - 8001:80
     networks:
@@ -73,7 +73,7 @@ services:
     container_name: lemp_redis
     image: redis:latest
     ports:
-      - 6379:6379
+      - 16379:6379
     environment:
       REDIS_HOST: redis_cache
     networks:
@@ -85,9 +85,9 @@ services:
     image: rediscommander/redis-commander:latest
     environment:
       REDIS_HOST: redis_cache
-    # port for running Redis Commander in browser http://localhost:8081
+    # port for running Redis Commander in browser http://localhost:8002
     ports:
-      - 8002:8002
+      - 8002:8081
     hostname: redis-commander
     networks:
       - app-network

@@ -6,7 +6,7 @@ LABEL build_date="2020-05-22"
 
 RUN mkdir /var/www/lempdemo
 
-COPY ./src/composer.json /var/www/lempdemo/
+COPY ./src/composer.json /var/www/lempdemo
 
 # Set working directory
 WORKDIR /var/www/lempdemo
@@ -20,8 +20,8 @@ RUN apt-get update && apt-get -y install git && apt-get -y install vim
 
 # Install dependencies
 RUN apt-get install -y libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libpng-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
     && docker-php-ext-configure gd --with-jpeg-dir=/usr/include \
     && docker-php-ext-install gd
 
@@ -36,10 +36,10 @@ RUN apt-get -y install nodejs && apt-get -y install npm
 
 #install zip extensions`
 RUN apt-get install -y \
-        libzip-dev \
-        zip \
-  && docker-php-ext-configure zip --with-libzip \
-  && docker-php-ext-install zip
+    libzip-dev \
+    zip \
+    && docker-php-ext-configure zip --with-libzip \
+    && docker-php-ext-install zip
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

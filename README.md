@@ -20,7 +20,7 @@
 - Restart service docker-compose: docker-compose restart
 
 ### 🚀 Connect mysql
-- host : 127.0.0.1
+- host : mysql
 - username : root
 - password : 123456
 - database : lemp_mysql
