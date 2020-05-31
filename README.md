@@ -28,8 +28,8 @@
 
 ### 🚀 Using a virtual host
 
-- On your machine, run `$ sudo nano /etc/hosts` and add `127.0.0.1  www.lempdemo.local`
-- Change the server name in `docker/local/nginx/conf.d/lempdemo.conf` to `lempdemo.local`
+- On your machine, run `$ sudo nano /etc/hosts` and add `127.0.0.1  www.lempdemo.local.com`
+- Change the server name in `docker/local/nginx/conf.d/lempdemo.conf` to `lempdemo.local.com`
 - Run `$ docker-compose up` again.
 
 ### Check Browser
