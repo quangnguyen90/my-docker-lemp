@@ -24,7 +24,7 @@
 - username : root
 - password : 123456
 - database : lemp_mysql
-- port : 6033
+- port : 3307
 
 ### 🚀 Using a virtual host
 

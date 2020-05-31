@@ -6,7 +6,7 @@ LABEL build_date="2020-05-22"
 
 RUN mkdir /var/www/lempdemo
 
-COPY ./src/composer.json /var/www/lempdemo
+COPY ./src/composer.json /var/www/lempdemo/
 
 # Set working directory
 WORKDIR /var/www/lempdemo

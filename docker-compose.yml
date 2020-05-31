@@ -14,6 +14,9 @@ services:
     environment:
       DB_HOST: mysql
       REDIS_HOST: redis_cache
+    depends_on:
+      - mysql
+      - redis_cache
     networks:
       - app-network
 
@@ -26,12 +29,14 @@ services:
     volumes:
       - ./src:/var/www/lempdemo
       - ./docker/local/nginx/conf.d/lempdemo.conf:/etc/nginx/conf.d/lempdemo.conf
-      - ./docker/local/nginx/logs/access.log:/var/log/nginx/access.log
-      - ./docker/local/nginx/logs/error.log:/var/log/nginx/error.log
+      - ./docker/local/nginx/logs:/var/log/nginx
     # port for running PHP in browser http://localhost:8000
     ports:
       - "8000:80"
-      - "443:443"
+    # SSL:  - "443:443"
+    depends_on:
+      - php_app
+      - mysql
     networks:
       - app-network
 
@@ -47,10 +52,10 @@ services:
       MYSQL_DATABASE: lemp_mysql
       MYSQL_USER: root
       MYSQL_PASSWORD: 123456
-      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: r123456
       TZ: Asia/Ho_Chi_Minh
     ports:
-      - 13306:3306
+      - 3307:3306
     networks:
       - app-network
 
@@ -59,12 +64,21 @@ services:
     container_name: lemp_phpmyadmin
     image: 'phpmyadmin/phpmyadmin'
     environment:
-      MYSQL_USERNAME: root
-      MYSQL_ROOT_PASSWORD: 123456
-      DB_HOST: mysql
+      # define address/host name of the MySQL server
+      PMA_HOST: mysql
+      # (Optional) define user to auto login, match with MYSQL_USER
+      PMA_USER: root
+      # (Optional) define password to auto login,  match with MYSQL_PASSWORD
+      PMA_PASSWORD: 123456
+      # define port of the MySQL server
+      PMA_PORT: 3306
+      # when set to 1 connection to the arbitrary server will be allowed
+      PMA_ARBITRARY: 1
     # port for running PHPMyAdmin in browser http://localhost:8001
     ports:
       - 8001:80
+    depends_on:
+      - mysql
     networks:
       - app-network
 
