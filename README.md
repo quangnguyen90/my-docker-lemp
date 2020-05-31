@@ -34,8 +34,8 @@
 
 ### Check Browser
 - localhost:8000 -> web
-- localhost:8001 -> phpMyAdmin
-- localhost:8002 -> redisCommander
+- localhost:8001 -> phpMyAdmin (host: mysql, username: root, password: 123456)
+- localhost:8002 -> redisCommander (username: root, password: qwerty)
 
 ### 🚀 Stack
 - nginx stable alpine

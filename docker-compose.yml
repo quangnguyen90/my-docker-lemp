@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./src:/var/www/lempdemo
-      - ./docker/local/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./docker/local/php/local.ini:/usr/local/etc/php/local.ini
     environment:
       DB_HOST: mysql
       REDIS_HOST: redis_cache
@@ -44,7 +44,9 @@ services:
   mysql:
     container_name: lemp_mysql
     image: mysql:5.7
+    command: "mysqld --init-file /data/application/init.sql"
     volumes:
+      - ./docker/local/mysql/init.sql:/data/application/init.sql
       - dbdata:/var/lib/mysql
       - ./docker/local/mysql/my.cnf:/etc/mysql/my.cnf
     environment:
@@ -88,6 +90,9 @@ services:
     image: redis:latest
     ports:
       - 16379:6379
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
     environment:
       REDIS_HOST: redis_cache
     networks:
@@ -98,13 +103,17 @@ services:
     container_name: lemp_redis_commander
     image: rediscommander/redis-commander:latest
     environment:
-      REDIS_HOST: redis_cache
+      - REDIS_HOST=redis_cache
+      - HTTP_USER=root
+      - HTTP_PASSWORD=qwerty
     # port for running Redis Commander in browser http://localhost:8002
     ports:
       - 8002:8081
     hostname: redis-commander
     networks:
       - app-network
+    depends_on: 
+      - redis_cache
 
 # Docker Networks
 networks:
@@ -114,3 +123,4 @@ networks:
 # Volumes
 volumes:
   dbdata:
+  redis-data:
