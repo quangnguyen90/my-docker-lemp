@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./src:/var/www/lempdemo
-      - ./docker/local/php/local.ini:/usr/local/etc/php/local.ini
+      - ./docker/local/php/php.ini:/usr/local/etc/php/php.ini
     environment:
       DB_HOST: mysql
       REDIS_HOST: redis_cache
