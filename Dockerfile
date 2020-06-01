@@ -28,7 +28,7 @@ RUN apt-get install -y libfreetype6-dev \
 RUN  apt-get install -y libmcrypt-dev \
     libmagickwand-dev --no-install-recommends \
     && pecl install mcrypt-1.0.2 \
-    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install pdo_mysql mysqli \
     && docker-php-ext-enable mcrypt
 
 # Install nodejs
@@ -60,6 +60,8 @@ RUN groupmod -g 1000 www-data && \
 
 # Copy existing application directory contents
 COPY ./src /var/www/lempdemo
+COPY ./docker/local/php/php.ini /usr/local/etc/conf.d/php.ini
+COPY ./docker/local/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/lempdemo/public
@@ -75,5 +77,5 @@ RUN chown -R www-data:www-data /var/www/lempdemo/public
 #USER www
 
 # Expose port 9000 and start php-fpm server
-#EXPOSE 9000
-#CMD ["php-fpm"]
+# EXPOSE 9000
+CMD ["php-fpm", "--nodaemonize"]

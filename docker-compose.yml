@@ -10,7 +10,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./src:/var/www/lempdemo
-      - ./docker/local/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/local/php/php.ini:/usr/local/etc/conf.d/php.ini
+      - ./docker/local/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
     environment:
       DB_HOST: mysql
       REDIS_HOST: redis_cache
@@ -30,13 +31,13 @@ services:
       - ./src:/var/www/lempdemo
       - ./docker/local/nginx/conf.d/lempdemo.conf:/etc/nginx/conf.d/lempdemo.conf
       - ./docker/local/nginx/logs:/var/log/nginx
+      - ./docker/local/nginx/nginx.conf:/etc/nginx/nginx.conf
     # port for running PHP in browser http://localhost:8000
     ports:
       - "8000:80"
     # SSL:  - "443:443"
     depends_on:
       - php_app
-      - mysql
     networks:
       - app-network
 

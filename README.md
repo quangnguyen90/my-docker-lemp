@@ -32,7 +32,7 @@
 - Change the server name in `docker/local/nginx/conf.d/lempdemo.conf` to `lempdemo.local.com`
 - Run `$ docker-compose up` again.
 
-### Check Browser
+### 🚀 Check Browser
 - localhost:8000 -> web
 - localhost:8001 -> phpMyAdmin (host: mysql, username: root, password: 123456)
 - localhost:8002 -> redisCommander (username: root, password: qwerty)
