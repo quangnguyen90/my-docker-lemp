@@ -78,4 +78,4 @@ RUN chown -R www-data:www-data /var/www/lempdemo/public
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
-CMD ["php-fpm"]
+CMD ["php-fpm", "--nodaemonize"]]
