@@ -67,15 +67,15 @@ COPY ./docker/local/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 RUN chown -R www-data:www-data /var/www/lempdemo/public
 
 # Add user for web application
-# RUN groupadd -g 1000 www
-# RUN useradd -u 1000 -ms /bin/bash -g www www
+#RUN groupadd -g 1000 www
+#RUN useradd -u 1000 -ms /bin/bash -g www www
 
-# Copy existing application directory permissions
-# COPY --chown=www:www . /var/www/lempdemo
+#Copy existing application directory permissions
+#COPY --chown=www:www . /var/www/lempdemo
 
 # Change current user to www
 #USER www
 
 # Expose port 9000 and start php-fpm server
-# EXPOSE 9000
-CMD ["php-fpm", "--nodaemonize"]
+EXPOSE 9000
+CMD ["php-fpm"]
