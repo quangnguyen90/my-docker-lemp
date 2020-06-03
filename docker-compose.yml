@@ -32,8 +32,10 @@ services:
     volumes:
       - ./src:/var/www/lempdemo
       - ./docker/local/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/local/nginx/conf.d/lempdemo.conf:/etc/nginx/conf.d/lempdemo.conf
-      - ./docker/local/nginx/logs:/var/log/nginx
+      - ./docker/local/nginx/sites-available/lempdemo.conf:/etc/nginx/conf.d/lempdemo.conf
+      - ./docker/local/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/local/nginx/logs/access.log:/var/log/nginx/access.log
+      - ./docker/local/nginx/logs/error.log:/var/log/nginx/error.log
     # port for running PHP in browser http://localhost:8000
     ports:
       - "8000:80"
@@ -79,9 +81,9 @@ services:
       PMA_PORT: 3306
       # when set to 1 connection to the arbitrary server will be allowed
       PMA_ARBITRARY: 1
-    # port for running PHPMyAdmin in browser http://localhost:8001
+    # port for running PHPMyAdmin in browser http://localhost:8100
     ports:
-      - 8001:80
+      - 8100:80
     depends_on:
       - mysql
     networks:
