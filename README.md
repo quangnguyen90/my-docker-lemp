@@ -29,12 +29,12 @@
 ### 🚀 Using a virtual host
 
 - On your machine, run `$ sudo nano /etc/hosts` and add `127.0.0.1  www.lempdemo.local.com`
-- Change the server name in `docker/local/nginx/conf.d/lempdemo.conf` to `lempdemo.local.com`
+- Change the server name in `docker/local/nginx/sites-available/lempdemo.conf` to `lempdemo.local.com`
 - Run `$ docker-compose up` again.
 
 ### 🚀 Check Browser
 - localhost:8000 -> web
-- localhost:8001 -> phpMyAdmin (host: mysql, username: root, password: 123456)
+- localhost:8100 -> phpMyAdmin (host: mysql, username: root, password: 123456)
 - localhost:8002 -> redisCommander (username: root, password: qwerty)
 
 ### 🚀 Stack
