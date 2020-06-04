@@ -16,7 +16,7 @@
 - Stop all Docker containers: docker stop $(docker ps -a -q)
 - Remove all Docker containers: docker rm $(docker ps -a -q)
 - Remove all Docker images: docker rmi $(docker images -q)
-- stop docker-compose: docker-compose down
+- Stop docker-compose: docker-compose down
 - Restart service docker-compose: docker-compose restart
 
 ### 🚀 Connect mysql
@@ -38,9 +38,9 @@
 - localhost:8002 -> redisCommander (username: root, password: qwerty)
 
 ### 🚀 Stack
-- nginx stable alpine
-- php 7.2
-- mysql:5.7
-- redis: latest
+- nginx : 1.18
+- php : 7.2
+- mysql : 5.7
+- redis : latest
 - redisCommander: latest
-- phpMyAdmin
+- phpMyAdmin : lastest
