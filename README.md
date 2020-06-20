@@ -44,3 +44,7 @@
 - redis : latest
 - redisCommander: latest
 - phpMyAdmin : lastest
+
+### Author
+- Name: Nguyễn Phú Quang
+- Email: nguyenphuquang90@gmail.com
